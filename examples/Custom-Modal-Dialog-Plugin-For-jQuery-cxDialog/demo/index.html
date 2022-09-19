@@ -1,0 +1,276 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cxDialog Custom Modal Dialog Plugin Examples</title>
+<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<link rel="stylesheet" href="../dist/css/cxdialog.css">
+<link rel="stylesheet" href="./css/demo.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>cxDialog Custom Modal Dialog Plugin Examples</h1>
+  </div>
+</header>
+<div class="main">
+  <div class="wrap">
+
+    <p>A simple lightweight yet highly customizable jQuery plugin used to create modal style dialog popups for alert, confirm and prompt boxes.</p>
+<div id="carbon-block" style="margin:30px auto"></div>
+<div style="margin:30px auto"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2783044520727903"
+     crossorigin="anonymous"></script>
+<!-- jQuery_demo -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-2783044520727903"
+     data-ad-slot="2780937993"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script></div>
+    <fieldset>
+      <legend>Basic</legend>
+      <section class="acts">
+        <a href="javascript://" rel="alert">Alert</a>
+        <a href="javascript://" rel="ok">Confirm</a>
+        <a href="javascript://" rel="confirm">Confirm + Cancel</a>
+        <a href="javascript://" rel="article">Long Content</a>
+      </section>
+    </fieldset>
+
+    <fieldset>
+      <legend>Form</legend>
+      <section class="acts">
+        <a href="javascript://" rel="text">Input</a>
+        <a href="javascript://" rel="radio">Radio Button</a>
+        <a href="javascript://" rel="checkbox">Checkbox</a>
+      </section>
+    </fieldset>
+
+    <form id="settings_form" action="javascript://" method="get">
+      <fieldset>
+        <legend>Configs:</legend>
+        <section>
+          <label>Theme:</label>
+          <select name="theme">
+            <option value="">Default</option>
+            <option value="ios">iOS</option>
+          </select>
+        </section>
+        <section>
+          <label>Title: </label>
+          <select name="title">
+            <option value="">None</option>
+            <option value="1">With Title</option>
+          </select>
+        </section>
+        <section>
+          <label>Outside Click:</label>
+          <select name="maskClose">
+            <option value="1">Close The Dialog</option>
+            <option value="">None</option>
+          </select>
+        </section>
+        <section>
+          <label>Form Source:</label>
+          <select name="form">
+            <option value="page">From Page</option>
+            <option value="js">JS Form</option>
+          </select>
+        </section>
+        <p>Close the dialog via cxDialog.close()</p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Log</legend>
+        <section id="result_log"></section>
+      </fieldset>
+    </form>
+
+    <form id="page_form" class="demo_form"></form>
+
+  </div>
+</div>
+
+<script src="../dist/js/cxdialog.js"></script>
+<script>
+(function() {
+  const resultLog = document.getElementById('result_log');
+  const pageForm = document.getElementById('page_form');
+  const jsForm = document.createElement('form');
+  jsForm.classList.add('demo_form');
+  // jsForm.style.setProperty('width', '300px');
+  // jsForm.style.setProperty('margin', '10px');
+  // jsForm.style.setProperty('padding', '20px');
+  // jsForm.style.setProperty('border', '1px solid #000');
+
+  const formOptions = {
+    title: 'Your favorite browser',
+    info: pageForm,
+    ok: () => {
+      getFormValue();
+    }, 
+    no: () => {},
+    // baseClass: '',
+  };
+
+  document.getElementById('settings_form').addEventListener('change', (e) => {
+    const el = e.target;
+    const value = el.value;
+    const nodeName = el.nodeName.toLowerCase();
+
+    if (['input', 'select'].indexOf(nodeName) >= 0) {
+      switch (el.name) {
+        case 'theme':
+          cxDialog.defaults.baseClass = value;
+          break;
+
+        case 'title':
+          cxDialog.defaults.title = value == 1 ? 'cxDialog' : '';
+          break;
+
+        case 'maskClose':
+          cxDialog.defaults.maskClose = Boolean(parseInt(value, 10));
+          break;
+
+        case 'form':
+          formOptions.info = value === 'js' ? jsForm : pageForm;
+          break;
+      };
+    };
+  });
+
+  document.body.addEventListener('click', (e) => {
+    const el = e.target;
+    const nodeName = el.nodeName.toLowerCase();
+
+    if (nodeName === 'a' && el.rel) {
+      const rel = el.rel;
+
+      switch (rel) {
+        case 'alert':
+          cxDialog('Hello World<br>I am cxDialog');
+          break;
+
+        case 'ok':
+          cxDialog({
+            info: 'Get started with the <strong>cxDialog</strong>',
+            ok: () => {
+              addLog('OK');
+            }
+          });
+          break;
+
+        case 'confirm':
+          cxDialog({
+            info: 'Get started with the <strong>cxDialog</strong>',
+            ok: () => {
+              addLog('OK');
+            },
+            no: () => {
+              addLog('Cancel');
+            },
+          });
+          break;
+
+        case 'article':
+          const opts = {
+            info: Array(99).fill('Article Content'),
+            buttons: []
+          };
+
+          opts.info.unshift('<div style="width:9999px;background:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,0.1) 100%);color:#fff;">Wider Content</div>');
+          opts.info = opts.info.join('<br>');
+
+          for (let i = 0; i < 9; i++) {
+            opts.buttons.push({
+              text: 'Button' + i,
+              callback: () => {
+                addLog('Button' + i)
+              }
+            });
+          };
+
+          cxDialog(opts);
+          break;
+
+        case 'text':
+          formOptions.info.innerHTML = '<div class="setvalue"><input name="name" type="text"></div>';
+          cxDialog(formOptions);
+          break;
+
+        case 'radio':
+          createOptions('radio');
+          cxDialog(formOptions);
+          break;
+
+        case 'checkbox':
+          createOptions('checkbox');
+          cxDialog(formOptions);
+          break;
+
+        case 'login':
+          cxDialog(formOptions);
+          break;
+      };
+    };
+  });
+
+  const createOptions = (type) => {
+    let now = new Date().getTime();
+    let html = '<div class="setvalue">';
+
+    for (let x of ['Chrome','Edge','Firefox']) {
+      let id = x.toLowerCase() + now;
+      html += '<input type="' + type + '" name="name" id="' + id + '" value="' + x + '"><label for="' + id + '">' + x + '</label>';
+    };
+
+    html += '</div>';
+
+    formOptions.info.innerHTML = html;
+  };
+
+  const getFormValue = () => {
+    const formData = new FormData(formOptions.info);
+    const values = [];
+
+    for (let x of formData.entries()) {
+      if (x[0] === 'name') {
+        values.push(x[1]);
+      };
+    };
+
+    addLog(values.join(','));
+  };
+
+  const addLog = (text) => {
+    resultLog.insertAdjacentHTML('beforeend', text + '<br>')
+  };
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1VDDWMRSTH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1VDDWMRSTH');
+</script>
+<script>
+try {
+  fetch(new Request("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", { method: 'HEAD', mode: 'no-cors' })).then(function(response) {
+    return true;
+  }).catch(function(e) {
+    var carbonScript = document.createElement("script");
+    carbonScript.src = "//cdn.carbonads.com/carbon.js?serve=CK7DKKQU&placement=wwwjqueryscriptnet";
+    carbonScript.id = "_carbonads_js";
+    document.getElementById("carbon-block").appendChild(carbonScript);
+  });
+} catch (error) {
+  console.log(error);
+}
+</script>
+</body>
+</html>
